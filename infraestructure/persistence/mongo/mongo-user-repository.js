@@ -1,21 +1,27 @@
 const { ObjectID } = require('mongodb');
-const User = require('../../../domain/user/user');
+const { toDomain } = require('./parser');
 
 class MongoUserRepository {
     constructor({ db }) {
-        (async () => {
-            this._db = await db.getInstance();
-        })();
+        this._db = db;
     }
 
     async find(id) {
-        const document = await this._db.collection('users').findOne({ '_id': new ObjectID(id) });
-        return new User(document._id, document.name);
+        const conn = await this._db.connect();
+
+        const document = await conn.collection('users').findOne({ '_id': new ObjectID(id) });
+        return toDomain(document);
+
+        conn.close();
     }
 
     async save(user) {
-        const userDocument = { '_id': new ObjectID(user.id), name: user.name };
-        await this._db.collection('users').insertOne(userDocument);
+        const conn = await this._db.connect();
+
+        const userDocument = { _id: new ObjectID(user.id), name: user.name, info: user.info, password: user.password };
+        await conn.collection('users').insertOne(userDocument);
+
+        conn.close();
     }
 }
 
