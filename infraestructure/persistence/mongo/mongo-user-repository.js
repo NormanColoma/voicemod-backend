@@ -15,6 +15,14 @@ class MongoUserRepository {
         conn.close();
     }
 
+    async findByEmail(email) {
+        const conn = await this._db.connect();
+        const document = await conn.collection('users').findOne({ email });
+        conn.close();
+
+        return document ? toDomain(document) : null;
+    }
+
     async save(user) {
         const conn = await this._db.connect();
 
