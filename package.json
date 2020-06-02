@@ -4,7 +4,7 @@
   "description": "Node DDD",
   "main": "index.js",
   "scripts": {
-    "start": "NODE_ENV=development index.js",
+    "start": "node . index.js",
     "test": "jest"
   },
   "author": "",
@@ -12,6 +12,7 @@
   "dependencies": {
     "awilix": "^4.2.6",
     "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "mongodb": "^3.5.8"
   },
