@@ -104,7 +104,7 @@ describe('user controller', () => {
 
         const { status, body, headers } = res;
         expect(status).toBe(500);
-        expect(body).toEqual({ error: 'Error' });
+        expect(body).toEqual({ error: 'There was an internal server error' });
         expect(headers['content-type']).toContain('application/json');
     });
 
