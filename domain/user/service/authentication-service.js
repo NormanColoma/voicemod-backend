@@ -31,6 +31,23 @@ class AuthenticationService {
 
         return this.tokenIssuer.issueToken(token.payload);
     }
+
+    isAuthenticated(encodedToken) {
+        let user, expiration;
+        try {
+          const decodedToken = this.tokenIssuer.decode(encodedToken);
+          user = decodedToken.user;
+          expiration = decodedToken.expiration;
+        } catch (ex) {
+            throw new Error('invalid token');
+        }
+
+        const token = new Token({ user, expiration });
+
+        if (token.isExpired) {
+            throw new Error('token has expired');
+        }
+    }
 }
 
 module.exports = AuthenticationService;

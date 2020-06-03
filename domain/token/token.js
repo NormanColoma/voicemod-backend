@@ -24,6 +24,10 @@ class Token {
     get payload() {
         return this._payload;
     }
+
+    get isExpired() {
+        return this.expiration < Math.floor(Date.now() / 1000);
+    }
 }
 
 module.exports = Token;

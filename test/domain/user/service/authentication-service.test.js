@@ -6,7 +6,6 @@ const Token = require('../../../../domain/token/token');
 describe('should authenticate user', () => {
     let userRepositoryMock;
     let userHasherMock;
-    let tokenIssuerMock;
     let loginRequest;
     let authenticationService;
     const date = Date.now();
@@ -19,9 +18,6 @@ describe('should authenticate user', () => {
         userHasherMock = {
             isSamePassword: jest.fn()
         };
-        tokenIssuerMock = {
-            issueToken: jest.fn()
-        }
 
         authenticationService = new AuthenticationService({ userRepository: userRepositoryMock,
             userHasher: userHasherMock, tokenIssuer: jwtTokenIssuer });
@@ -104,5 +100,52 @@ describe('should authenticate user', () => {
         expect(userHasherMock.isSamePassword.mock.calls.length).toBe(1);
         expect(userHasherMock.isSamePassword.mock.calls[0][0]).toBe(loginRequest.password);
         expect(userHasherMock.isSamePassword.mock.calls[0][1]).toBe(password);
+    });
+
+    it('should throw error when invalid token provided', async () => {
+        try {
+            await authenticationService.isAuthenticated({ token: 'invalid' });
+        } catch({ message }) {
+            expect(message).toBe('invalid token');
+        }
+    });
+
+    it('should throw error when token is expired', async () => {
+        const token = new Token({
+            user: {
+                name: 'pepe',
+                email: 'mail'
+            },
+            expiration: Math.floor(date / 1000) - 60
+        });
+
+        const encodedToken = jwtTokenIssuer.issueToken(token.payload);
+
+        try {
+            await authenticationService.isAuthenticated(encodedToken);
+        } catch({ message }) {
+            expect(message).toBe('token has expired');
+        }
+    });
+
+    it('should check authentication correctly', async () => {
+        //global.Date.now = jest.fn(() => date - (60*60));
+
+        const token = new Token({
+            user: {
+                name: 'pepe',
+                email: 'mail'
+            },
+            expiration: Math.floor(date / 1000) + (60 * 60)
+        });
+
+        const encodedToken = jwtTokenIssuer.issueToken(token.payload);
+
+        try {
+            await authenticationService.isAuthenticated(encodedToken);
+            expect(true).toBeTruthy();
+        } catch({ message }) {
+            expect(true).toBeFalsy();
+        }
     });
 });

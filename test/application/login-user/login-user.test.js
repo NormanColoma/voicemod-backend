@@ -1,5 +1,4 @@
 const LoginUser = require('../../../application/login-user');
-const User = require('../../../domain/user/user');
 
 describe('login user use case', () => {
     let authenticationServiceMock;
