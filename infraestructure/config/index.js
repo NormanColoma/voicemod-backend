@@ -7,6 +7,9 @@ const development = {
     },
     server: {
         port: 3000
+    },
+    security: {
+        jwtSecretKey: process.env.JWT_SECRET
     }
 };
 
@@ -17,6 +20,9 @@ const test = {
     },
     server: {
         port: 3333
+    },
+    security: {
+        jwtSecretKey: 'secret'
     }
 };
 
