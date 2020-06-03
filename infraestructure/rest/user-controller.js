@@ -24,10 +24,10 @@ router.post('/users', [
         .isEmail()
 ], isBodyValid, async (req, res, next) => {
 
-    const { id, name, surnames, postalCode, country, email, phone, password } = req.body;
+    const { id, name, postalCode, country, email, phone, password } = req.body;
     const userRequest = {
         id,
-        name: { firstName: name, surnames },
+        name: { firstName: name },
         info: { email, postalCode, country, phone },
         password
     };

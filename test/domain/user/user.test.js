@@ -44,14 +44,14 @@ describe('user creation', () => {
     test('should create user correctly', () => {
         const actualUser = new User({
             id: 'id',
-            name: { firstName: 'firstName', surnames: 'surnames'},
+            name: { firstName: 'firstName' },
             password: '1234567',
             info: { email: 'email', country: 'country', phone: 'phone', postalCode: 'postalCode'}
         });
 
         const expectedUser = {
             _id: 'id',
-            _name: { _firstName: 'firstName', _surnames: 'surnames'},
+            _name: { _firstName: 'firstName' },
             _password: '1234567',
             _info: { _email: 'email', _country: 'country', _phone: 'phone', _postalCode: 'postalCode'}
         };
