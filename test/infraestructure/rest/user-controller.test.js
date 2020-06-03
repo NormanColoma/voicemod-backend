@@ -9,6 +9,10 @@ const loginUserMock = {
     login: () => {}
 };
 
+const updateUserMock = {
+	update: () => {}
+};
+
 jest.mock('../../../infraestructure/rest/middlewares/auth-validator',
     () => jest.fn((req, res, next) =>
         next()));
@@ -18,7 +22,8 @@ const awilix = require('awilix');
 container.register({
     registerUser: awilix.asValue(registerUserMock),
     deleteUser: awilix.asValue(deleteUserMock),
-    loginUser: awilix.asValue(loginUserMock)
+    loginUser: awilix.asValue(loginUserMock),
+    updateUser: awilix.asValue(updateUserMock)
 });
 
 const { app, server } = require('../../../index');
@@ -184,6 +189,98 @@ describe('user controller', () => {
             expect(headers['content-type']).toContain('application/json');
         });
     });
+
+	describe('UPDATE user', () => {
+		test('should return 422 status when updating a user without any of its values', async () => {
+			const res = await request.put('/users')
+				.send({});
+
+			const expectedErrors = [
+				{ message: 'Field cannot be blank', field: 'id' },
+				{ message: 'Field cannot be blank', field: 'name' },
+				{ message: 'Field cannot be blank', field: 'surnames' },
+				{ message: 'Field cannot be blank', field: 'country' },
+				{ message: 'Field cannot be blank', field: 'phone' },
+				{ message: 'Field cannot be blank', field: 'postalCode' },
+				{ message: 'Field cannot be blank', field: 'newPassword' },
+				{ message: 'Field cannot be blank', field: 'password' },
+				{ message: 'Field cannot be blank', field: 'email' },
+			];
+
+			const { status, body, headers } = res;
+			expect(status).toBe(422);
+			expect(body).toEqual({ errors: expectedErrors });
+			expect(headers['content-type']).toContain('application/json');
+		});
+
+		test('should return 422 status when updating a user with invalid email', async () => {
+			const res = await request.put('/users')
+				.send({
+					id: 'id',
+					name: 'name',
+					surnames: 'surnames',
+					email: 'email',
+					password: 'password',
+					newPassword: 'newPassword',
+					country: 'Spain',
+					phone: '655444333',
+					postalCode: '03690'
+				});
+
+			const expectedErrors = [
+				{ message: 'Provided value has no correct format for field', field: 'email' },
+			];
+
+			const { status, body, headers } = res;
+			expect(status).toBe(422);
+			expect(body).toEqual({ errors: expectedErrors });
+			expect(headers['content-type']).toContain('application/json');
+		});
+
+		test('should return 422 status when updating a user with a newPassword shorter than 7 characters', async () => {
+			const res = await request.put('/users')
+				.send({
+					id: 'id',
+					name: 'name',
+					surnames: 'surnames',
+					email: 'email@email.com',
+					password: 'password',
+					newPassword: 'short',
+					country: 'Spain',
+					phone: '655444333',
+					postalCode: '03690'
+				});
+
+			const expectedErrors = [
+				{ message: 'Provided value has no correct format for field', field: 'newPassword' },
+			];
+
+			const { status, body, headers } = res;
+			expect(status).toBe(422);
+			expect(body).toEqual({ errors: expectedErrors });
+			expect(headers['content-type']).toContain('application/json');
+		});
+
+		test('should return 204 status when updating a user correctly', async () => {
+			updateUserMock.update = () => {};
+
+			const res = await request.put('/users')
+				.send({
+					id: 'id',
+					name: 'name',
+					surnames: 'surnames',
+					email: 'email@email.com',
+					password: 'password',
+					newPassword: 'newPassword',
+					country: 'Spain',
+					phone: '655444333',
+					postalCode: '03690'
+				});
+
+			const { status } = res;
+			expect(status).toBe(204);
+		});
+	});
 
     afterAll(async () => {
         await server.close();
