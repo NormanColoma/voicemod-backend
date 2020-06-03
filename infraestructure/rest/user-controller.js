@@ -33,6 +33,7 @@ router.post('/users', [
 
     try {
         await registerUser.register(userRequest);
+		res.location(`/users/${ id }`);
         return res.status(201).send();
     } catch (ex) {
         next(ex);
