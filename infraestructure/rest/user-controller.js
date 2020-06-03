@@ -4,6 +4,7 @@ const router = express.Router();
 const container = require('../../container');
 const registerUser = container.resolve('registerUser');
 const deleteUser = container.resolve('deleteUser');
+const loginUser = container.resolve('loginUser');
 const  { isBodyValid } = require('./middlewares/rest-validator');
 
 
@@ -42,6 +43,29 @@ router.delete('/users/:id', async (req, res, next) => {
         await deleteUser.delete({ id });
 
         return res.status(204).send();
+    } catch (ex) {
+        next(ex);
+    }
+});
+
+router.post('/login', [
+    check('email')
+        .notEmpty()
+        .bail()
+        .isEmail(),
+    check('password')
+        .notEmpty()
+], isBodyValid, async (req, res, next) => {
+
+    const { email, password } = req.body;
+    const loginRequest = {
+        email,
+        password
+    };
+
+    try {
+        const token = await loginUser.login(loginRequest);
+        return res.status(200).send({ token });
     } catch (ex) {
         next(ex);
     }
