@@ -39,7 +39,7 @@ router.post('/users', [
     }
 });
 
-router.put('/users', [
+router.put('/users', authValidator, [
     check('id').notEmpty(),
     check('name').notEmpty(),
     check('surnames').notEmpty(),
