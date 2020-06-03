@@ -3,6 +3,7 @@ const User = require('../../../domain/user/user');
 
 describe('register user use case', () => {
    let userRepositoryMock;
+   let userHasherMock;
    let registerUser;
    let userRequest;
 
@@ -11,7 +12,12 @@ describe('register user use case', () => {
          findByEmail: jest.fn(),
          save: jest.fn(),
       };
-      registerUser = new RegisterUser({ userRepository: userRepositoryMock });
+      userHasherMock = {
+         hashPassword: jest.fn()
+      };
+
+      registerUser = new RegisterUser({ userRepository: userRepositoryMock, userHasher: userHasherMock});
+
       userRequest = {
          id: '5ed4e0fd385b75ad664e66d2',
          name: { firstName: 'firstName'},
@@ -35,6 +41,7 @@ describe('register user use case', () => {
 
    it('should register user correctly', async () => {
       userRepositoryMock.findByEmail.mockReturnValue(null);
+      userHasherMock.hashPassword.mockReturnValue('fakeHashedPassword');
 
       await registerUser.register(userRequest);
 
@@ -46,8 +53,10 @@ describe('register user use case', () => {
          id: userRequest.id,
          info: userRequest.info,
          name: userRequest.name,
-         password: userRequest.password
+         password: 'fakeHashedPassword'
       });
       expect(userRepositoryMock.save.mock.calls[0][0]).toEqual(expectedUser);
+      expect(userHasherMock.hashPassword.mock.calls.length).toEqual(1);
+      expect(userHasherMock.hashPassword.mock.calls[0][0]).toEqual('password');
    });
 });
