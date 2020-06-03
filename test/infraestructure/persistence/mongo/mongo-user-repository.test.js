@@ -72,8 +72,7 @@ describe('user mongo repository', () => {
         const collectionMock = {
             collection: (collection) => {
                 return { findOne: findOneMock }
-            },
-            close: jest.fn()
+            }
         };
         const dbMock = {
             connect: () => collectionMock,
@@ -89,5 +88,24 @@ describe('user mongo repository', () => {
         const expectedUser = toDomain(userDocument);
 
         expect(actualUser).toEqual(expectedUser);
+    });
+
+    test('should remove user', async () => {
+        const removeMock = jest.fn();
+        const collectionMock = {
+            collection: (collection) => {
+                return { remove: removeMock }
+            }
+        };
+        const dbMock = {
+            connect: () => collectionMock,
+            disconnect: () => {}
+        };
+
+        mongoUserRepository = new MongoUserRepository({ db: dbMock });
+        await mongoUserRepository.delete('5ed4e0fd385b75ad664e66d2');
+
+        expect(removeMock.mock.calls.length).toBe(1);
+        expect(removeMock.mock.calls[0][0]).toEqual({ _id: new ObjectID('5ed4e0fd385b75ad664e66d2') });
     });
 });
