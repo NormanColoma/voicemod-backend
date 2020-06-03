@@ -16,7 +16,9 @@ app.use((err, req, res, next) => {
     if (process.env.NODE_ENV !== 'test') {
         console.error(err.stack);
     }
-    res.status(STATUS_SERVER_ERROR).send({ error: err.message });
+
+    const error = err.message ? err.message : err;
+    res.status(STATUS_SERVER_ERROR).send({ error: error });
 });
 
 const server = app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`));

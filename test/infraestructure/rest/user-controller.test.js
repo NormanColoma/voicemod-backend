@@ -1,10 +1,15 @@
 const registerUserMock = {
     register: () => {}
-}
+};
+const deleteUserMock = {
+    delete: () => {}
+};
+
 const container = require('../../../container');
 const awilix = require('awilix');
 container.register({
-    registerUser: awilix.asValue(registerUserMock)
+    registerUser: awilix.asValue(registerUserMock),
+    deleteUser: awilix.asValue(deleteUserMock)
 });
 
 const { app, server } = require('../../../index');
@@ -78,8 +83,28 @@ describe('user controller', () => {
                 password: 'password'
             });
 
-        const { status, headers } = res;
+        const { status } = res;
         expect(status).toBe(201);
+    });
+
+
+    test('should return 204 status when deleting a user correctly', async () => {
+        const res = await request.delete('/users/12345')
+            .send();
+
+        const { status } = res;
+        expect(status).toBe(204);
+    });
+
+    test('should return 500 status when deleting a user an error produced', async () => {
+        deleteUserMock.delete = () => Promise.reject('Error');
+
+        const res = await request.delete('/users/12345')
+            .send();
+
+        const { status, body, headers } = res;
+        expect(status).toBe(500);
+        expect(body).toEqual({ error: 'Error' });
         expect(headers['content-type']).toContain('application/json');
     });
 

@@ -3,6 +3,7 @@ const userRepository = require('./domain/user/user-repository')
 const MongoUserRepository = require('./infraestructure/persistence/mongo/mongo-user-repository');
 const MongoDbHandler = require('./infraestructure/persistence/mongo/mongo-db-handler');
 const RegisterUser = require('./application/register-user');
+const DeleteUser = require('./application/delete-user');
 const userHasher = require('./domain/user/service/user-hasher');
 const bcryptHasher = require('./infraestructure/security/bcrypt-hasher');
 
@@ -15,6 +16,7 @@ container.register({
     mongoUserRepository: awilix.asClass(MongoUserRepository),
     userRepository: awilix.asFunction(userRepository),
     registerUser: awilix.asClass(RegisterUser),
+    deleteUser: awilix.asClass(DeleteUser),
     userHasher: awilix.asFunction(userHasher),
     bcryptHasher: awilix.asClass(bcryptHasher)
 });

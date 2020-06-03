@@ -1,15 +1,11 @@
 const express = require('express');
-const { check, validationResult } = require('express-validator');
+const { check } = require('express-validator');
 const router = express.Router();
 const container = require('../../container');
-const userRepository = container.resolve('userRepository');
 const registerUser = container.resolve('registerUser');
-const isBodyValid = require('./middlewares/body-validator');
+const deleteUser = container.resolve('deleteUser');
+const  { isBodyValid } = require('./middlewares/rest-validator');
 
-router.get('/', async (req, res) => {
-    const result = await userRepository.find("5ed4e0fd385b75ad664e66d2");
-    return res.send(result);
-});
 
 router.post('/users', [
     check('id').notEmpty(),
@@ -35,6 +31,17 @@ router.post('/users', [
     try {
         await registerUser.register(userRequest);
         return res.status(201).send();
+    } catch (ex) {
+        next(ex);
+    }
+});
+
+router.delete('/users/:id', async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        await deleteUser.delete({ id });
+
+        return res.status(204).send();
     } catch (ex) {
         next(ex);
     }

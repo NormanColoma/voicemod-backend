@@ -17,4 +17,4 @@ const formatErrors = (errors) => {
     })
 }
 
-module.exports = isBodyValid;
+module.exports = { isBodyValid };
