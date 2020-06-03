@@ -35,7 +35,7 @@ class AuthenticationService {
     isAuthenticated(encodedToken) {
         let user, expiration;
         try {
-          const decodedToken = this.tokenIssuer.decode(encodedToken);
+          const decodedToken = this.tokenIssuer.decodeToken(encodedToken);
           user = decodedToken.user;
           expiration = decodedToken.expiration;
         } catch (ex) {

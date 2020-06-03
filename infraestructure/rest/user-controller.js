@@ -6,6 +6,7 @@ const registerUser = container.resolve('registerUser');
 const deleteUser = container.resolve('deleteUser');
 const loginUser = container.resolve('loginUser');
 const  { isBodyValid } = require('./middlewares/rest-validator');
+const  authValidator = require('./middlewares/auth-validator');
 
 
 router.post('/users', [
@@ -37,7 +38,7 @@ router.post('/users', [
     }
 });
 
-router.delete('/users/:id', async (req, res, next) => {
+router.delete('/users/:id', authValidator, async (req, res, next) => {
     try {
         const id = req.params.id;
         await deleteUser.delete({ id });

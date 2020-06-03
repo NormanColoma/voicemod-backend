@@ -6,7 +6,7 @@ class JwtTokenIssuer {
         return jwt.sign(payload, jwtSecretKey);
     }
 
-    decode(token) {
+    decodeToken(token) {
         return jwt.verify(token, jwtSecretKey);
     }
 }

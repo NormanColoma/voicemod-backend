@@ -129,8 +129,6 @@ describe('should authenticate user', () => {
     });
 
     it('should check authentication correctly', async () => {
-        //global.Date.now = jest.fn(() => date - (60*60));
-
         const token = new Token({
             user: {
                 name: 'pepe',

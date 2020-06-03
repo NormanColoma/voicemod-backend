@@ -9,6 +9,10 @@ const loginUserMock = {
     login: () => {}
 };
 
+jest.mock('../../../infraestructure/rest/middlewares/auth-validator',
+    () => jest.fn((req, res, next) =>
+        next()));
+
 const container = require('../../../container');
 const awilix = require('awilix');
 container.register({
