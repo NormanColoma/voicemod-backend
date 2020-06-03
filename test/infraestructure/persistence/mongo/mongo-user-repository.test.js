@@ -12,10 +12,10 @@ describe('user mongo repository', () => {
             collection: (collection) => {
                 return { insertOne: insertOneMock }
             },
-            close: jest.fn()
         };
         const dbMock = {
             connect: () => collectionMock,
+            disconnect: () => {}
         };
 
         mongoUserRepository = new MongoUserRepository({ db: dbMock });
@@ -36,7 +36,6 @@ describe('user mongo repository', () => {
         };
 
         expect(insertOneMock.mock.calls.length).toBe(1);
-        expect(collectionMock.close.mock.calls.length).toBe(1);
         expect(insertOneMock.mock.calls[0][0]).toEqual(expectedUserDocument);
     });
 
@@ -45,11 +44,11 @@ describe('user mongo repository', () => {
         const collectionMock = {
             collection: (collection) => {
                 return { findOne: findOneMock }
-            },
-            close: jest.fn()
+            }
         };
         const dbMock = {
             connect: () => collectionMock,
+            disconnect: () => {}
         };
 
         mongoUserRepository = new MongoUserRepository({ db: dbMock });
@@ -57,7 +56,6 @@ describe('user mongo repository', () => {
         const actualUser = await mongoUserRepository.findByEmail('email');
 
         expect(findOneMock.mock.calls.length).toBe(1);
-        expect(collectionMock.close.mock.calls.length).toBe(1);
         expect(findOneMock.mock.calls[0][0]).toEqual({ email: 'email' });
         expect(actualUser).toEqual(null);
     });
@@ -79,13 +77,13 @@ describe('user mongo repository', () => {
         };
         const dbMock = {
             connect: () => collectionMock,
+            disconnect: () => {}
         };
 
         mongoUserRepository = new MongoUserRepository({ db: dbMock });
         const actualUser = await mongoUserRepository.findByEmail('email');
 
         expect(findOneMock.mock.calls.length).toBe(1);
-        expect(collectionMock.close.mock.calls.length).toBe(1);
         expect(findOneMock.mock.calls[0][0]).toEqual({ email: 'email' });
 
         const expectedUser = toDomain(userDocument);

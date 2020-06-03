@@ -10,15 +10,17 @@ class MongoUserRepository {
         const conn = await this._db.connect();
 
         const document = await conn.collection('users').findOne({ '_id': new ObjectID(id) });
-        return toDomain(document);
 
-        conn.close();
+        this._db.disconnect();
+
+        return toDomain(document);
     }
 
     async findByEmail(email) {
         const conn = await this._db.connect();
         const document = await conn.collection('users').findOne({ email });
-        conn.close();
+
+        this._db.disconnect();
 
         return document ? toDomain(document) : null;
     }
@@ -29,7 +31,7 @@ class MongoUserRepository {
         const userDocument = { _id: new ObjectID(user.id), name: user.name, info: user.info, password: user.password };
         await conn.collection('users').insertOne(userDocument);
 
-        conn.close();
+        this._db.disconnect();
     }
 }
 
