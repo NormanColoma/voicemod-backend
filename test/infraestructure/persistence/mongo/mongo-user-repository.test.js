@@ -7,10 +7,10 @@ describe('user mongo repository', () => {
     let mongoUserRepository;
 
     test('should insert a user into collection', async () => {
-        const insertOneMock = jest.fn(document => Promise.resolve());
+        const saveMock = jest.fn(document => Promise.resolve());
         const collectionMock = {
             collection: (collection) => {
-                return { insertOne: insertOneMock }
+                return { replaceOne: saveMock }
             },
         };
         const dbMock = {
@@ -39,8 +39,8 @@ describe('user mongo repository', () => {
             password: user.password
         };
 
-        expect(insertOneMock.mock.calls.length).toBe(1);
-        expect(insertOneMock.mock.calls[0][0]).toEqual(expectedUserDocument);
+        expect(saveMock.mock.calls.length).toBe(1);
+        expect(saveMock.mock.calls[0][1]).toEqual(expectedUserDocument);
     });
 
     test('should return null if no user found by email', async () => {

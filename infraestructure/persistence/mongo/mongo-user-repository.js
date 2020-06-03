@@ -29,7 +29,7 @@ class MongoUserRepository {
         const conn = await this._db.connect();
 
         const userDocument = toDocument(user);
-        await conn.collection('users').insertOne(userDocument);
+        await conn.collection('users').replaceOne({_id: userDocument._id }, userDocument, { upsert: true });
 
         this._db.disconnect();
     }
