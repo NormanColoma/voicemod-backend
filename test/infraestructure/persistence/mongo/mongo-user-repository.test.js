@@ -22,16 +22,20 @@ describe('user mongo repository', () => {
 
         const user = new User({
             id: '5ed4e0fd385b75ad664e66d2',
-            name: { firstName: 'firstName'},
-            info: { email: 'email' },
+            name: { firstName: 'firstName', surnames: 'surnames' },
+            info: { email: 'email', country: 'country', phone: 'phone', postalCode: 'postalCode' },
             password:'password'
         });
         await mongoUserRepository.save(user);
 
         const expectedUserDocument = {
             _id: new ObjectID(user.id),
-            name: user.name,
-            info: user.info,
+            name: user.name.firstName,
+            surnames: user.name.surnames,
+            email: user.info.email,
+            phone: user.info.phone,
+            country: user.info.country,
+            postalCode: user.info.postalCode,
             password: user.password
         };
 
@@ -63,10 +67,15 @@ describe('user mongo repository', () => {
     test('should return user found by email', async () => {
         const userDocument = {
             _id: new ObjectID('5ed4e0fd385b75ad664e66d2'),
-            name:  { firstName: 'firstName'},
-            info:  { email: 'email' },
-            password: 'password'
+            name: 'firstName',
+            surnames: 'surnames',
+            email: 'email',
+            country: 'country',
+            phone: 'phone',
+            postalCode: 'postalCode',
+            password:'password'
         };
+
 
         const findOneMock = jest.fn(email => Promise.resolve(userDocument));
         const collectionMock = {

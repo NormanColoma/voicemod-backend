@@ -1,10 +1,19 @@
 class UserName {
-    constructor({ firstName }) {
+    constructor({ firstName, surnames }) {
         this.firstName = firstName;
+        this._surnames = surnames;
     }
 
     get firstName() {
         return this._firstName;
+    }
+
+    get surnames() {
+        return this._surnames;
+    }
+
+    get fullName() {
+        return `${this.firstName}  ${this.surnames}`;
     }
 
     set firstName(firstName) {

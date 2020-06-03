@@ -1,5 +1,5 @@
 const { ObjectID } = require('mongodb');
-const { toDomain } = require('./parser');
+const { toDomain, toDocument } = require('./parser');
 
 class MongoUserRepository {
     constructor({ db }) {
@@ -28,7 +28,7 @@ class MongoUserRepository {
     async save(user) {
         const conn = await this._db.connect();
 
-        const userDocument = { _id: new ObjectID(user.id), name: user.name, info: user.info, password: user.password };
+        const userDocument = toDocument(user);
         await conn.collection('users').insertOne(userDocument);
 
         this._db.disconnect();
