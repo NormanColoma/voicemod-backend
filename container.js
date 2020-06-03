@@ -5,6 +5,7 @@ const MongoDbHandler = require('./infraestructure/persistence/mongo/mongo-db-han
 const RegisterUser = require('./application/register-user');
 const LoginUser = require('./application/login-user');
 const DeleteUser = require('./application/delete-user');
+const UpdateUser = require('./application/update-user');
 const userHasher = require('./domain/user/service/user-hasher');
 const tokenIssuer = require('./domain/token/service/token-issuer');
 const JwtTokenIssuer = require('./infraestructure/security/jwt-token-issuer');
@@ -22,6 +23,7 @@ container.register({
     registerUser: awilix.asClass(RegisterUser),
     loginUser: awilix.asClass(LoginUser),
     deleteUser: awilix.asClass(DeleteUser),
+    updateUser: awilix.asClass(UpdateUser),
     userHasher: awilix.asFunction(userHasher),
     bcryptHasher: awilix.asClass(bcryptHasher),
     tokenIssuer: awilix.asFunction(tokenIssuer),
