@@ -192,11 +192,10 @@ describe('user controller', () => {
 
 	describe('UPDATE user', () => {
 		test('should return 422 status when updating a user without any of its values', async () => {
-			const res = await request.put('/users')
+			const res = await request.put('/users/id')
 				.send({});
 
 			const expectedErrors = [
-				{ message: 'Field cannot be blank', field: 'id' },
 				{ message: 'Field cannot be blank', field: 'name' },
 				{ message: 'Field cannot be blank', field: 'surnames' },
 				{ message: 'Field cannot be blank', field: 'country' },
@@ -214,7 +213,7 @@ describe('user controller', () => {
 		});
 
 		test('should return 422 status when updating a user with invalid email', async () => {
-			const res = await request.put('/users')
+			const res = await request.put('/users/id')
 				.send({
 					id: 'id',
 					name: 'name',
@@ -238,7 +237,7 @@ describe('user controller', () => {
 		});
 
 		test('should return 422 status when updating a user with a newPassword shorter than 7 characters', async () => {
-			const res = await request.put('/users')
+			const res = await request.put('/users/id')
 				.send({
 					id: 'id',
 					name: 'name',
@@ -264,7 +263,7 @@ describe('user controller', () => {
 		test('should return 204 status when updating a user correctly', async () => {
 			updateUserMock.update = () => {};
 
-			const res = await request.put('/users')
+			const res = await request.put('/users/id')
 				.send({
 					id: 'id',
 					name: 'name',

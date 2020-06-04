@@ -40,8 +40,7 @@ router.post('/users', [
     }
 });
 
-router.put('/users', authValidator, [
-    check('id').notEmpty(),
+router.put('/users/:id', authValidator, [
     check('name').notEmpty(),
     check('surnames').notEmpty(),
     check('country').notEmpty(),
@@ -58,9 +57,9 @@ router.put('/users', authValidator, [
         .isEmail()
 ], isBodyValid, async (req, res, next) => {
 
-    const { id, name, surnames, postalCode, country, email, phone, password, newPassword } = req.body;
+    const { name, surnames, postalCode, country, email, phone, password, newPassword } = req.body;
     const userRequest = {
-        id,
+        id: req.params.id,
         name: { firstName: name, surnames },
         info: { email, postalCode, country, phone },
         password,
