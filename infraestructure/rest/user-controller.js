@@ -33,7 +33,10 @@ router.post('/users', [
 
     try {
         await registerUser.register(userRequest);
-		res.location(`/users/${ id }`);
+
+        const location = `${req.protocol}://${ req.get('host') }/users/${ id }`
+		res.location(location);
+
         return res.status(201).send();
     } catch (ex) {
         next(ex);

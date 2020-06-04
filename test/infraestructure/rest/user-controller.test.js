@@ -12,6 +12,7 @@ const loginUserMock = {
 const updateUserMock = {
 	update: () => {}
 };
+const { port } = require('../../../infraestructure/config')
 
 jest.mock('../../../infraestructure/rest/middlewares/auth-validator',
     () => jest.fn((req, res, next) =>
@@ -98,8 +99,9 @@ describe('user controller', () => {
                     password: 'password'
                 });
 
-            const { status } = res;
+            const { status, headers } = res;
             expect(status).toBe(201);
+            expect(headers['location']).not.toBeNull();
         });
     });
 
