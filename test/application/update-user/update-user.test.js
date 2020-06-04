@@ -68,6 +68,28 @@ describe('update user use case', () => {
         expect(userHasherMock.isSamePassword.mock.calls[0][1]).toBe(currentUser.password);
     });
 
+    it('should throw exception if updating mail that already belongs to another user', async () => {
+        const currentUser = new User({
+            id: 'differentId',
+            info: userRequest.info,
+            name: userRequest.name,
+            password: 'fakeHashedPassword'
+        });
+
+        userRepositoryMock.findByEmail.mockReturnValue(currentUser);
+
+        try {
+            await updateUser.update(userRequest);
+        } catch (e) {
+            expect(e.message).toEqual(`There is another registered user with email: ${userRequest.info.email}`);
+        }
+
+        expect(userRepositoryMock.findByEmail.mock.calls.length).toBe(1);
+        expect(userRepositoryMock.findByEmail.mock.calls[0][0]).toBe(userRequest.info.email);
+        expect(userHasherMock.hashPassword.mock.calls.length).toBe(0);
+        expect(userHasherMock.isSamePassword.mock.calls.length).toBe(0);
+    });
+
 
     it('should updateUserCorrectly', async () => {
         const currentUser = new User({

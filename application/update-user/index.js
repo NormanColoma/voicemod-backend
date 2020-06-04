@@ -13,6 +13,10 @@ class UpdateUser {
             throw new Error(`There is no user with email: ${info.email}`);
         }
 
+        if (currentUser.id !== id) {
+            throw new Error(`There is another registered user with email: ${info.email}`);
+        }
+
         const passwordMatch = await this._userHasher.isSamePassword(password, currentUser.password);
 
         if (!passwordMatch) {
