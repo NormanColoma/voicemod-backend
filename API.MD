@@ -54,7 +54,7 @@ It will return `200 Ok` http status if all went ok with `JWT token` issued in th
 }
 ```
 
-###Users
+### Users
 
 Ednpoints for creating, updating, and deleting users.
 
