@@ -18,7 +18,7 @@ describe('auth validator', () => {
         next();
     });
 
-    it('should return 403 when authorization header is present but without bearer', (next) => {
+    it('should return 401 when authorization header is present but without bearer', (next) => {
         const res = httpMocks.createResponse();
         const req = {
             headers: {
@@ -30,14 +30,14 @@ describe('auth validator', () => {
 
         const expectedError = { error: 'invalid token' }
 
-        expect(statusCode).toEqual(403);
+        expect(statusCode).toEqual(401);
         expect(_getData()).toEqual(expectedError);
         expect(getHeader('content-type')).toContain('application/json');
 
         next();
     });
 
-    it('should return 403 when authorization header is present but without token value', (next) => {
+    it('should return 401 when authorization header is present but without token value', (next) => {
         const res = httpMocks.createResponse();
         const req = {
             headers: {
@@ -49,14 +49,14 @@ describe('auth validator', () => {
 
         const expectedError = { error: 'invalid token' }
 
-        expect(statusCode).toEqual(403);
+        expect(statusCode).toEqual(401);
         expect(_getData()).toEqual(expectedError);
         expect(getHeader('content-type')).toContain('application/json');
 
         next();
     });
 
-    it('should return 403 when token provided is invalid', (next) => {
+    it('should return 401 when token provided is invalid', (next) => {
         const res = httpMocks.createResponse();
         const req = {
             headers: {
@@ -68,7 +68,7 @@ describe('auth validator', () => {
 
         const expectedError = { error: 'invalid token' }
 
-        expect(statusCode).toEqual(403);
+        expect(statusCode).toEqual(401);
         expect(_getData()).toEqual(expectedError);
         expect(getHeader('content-type')).toContain('application/json');
 

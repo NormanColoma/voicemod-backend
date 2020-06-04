@@ -13,14 +13,14 @@ const authValidator = (req, res, next) => {
 
     if (bearer !== 'Bearer') {
         res.setHeader('Content-Type', 'application/json');
-        return res.status(403).send({ error: 'invalid token'});
+        return res.status(401).send({ error: 'invalid token'});
     }
 
     try {
         authenticationService.isAuthenticated(token);
     } catch ({ message }) {
         res.setHeader('Content-Type', 'application/json');
-        return res.status(403).send({ error: message });
+        return res.status(401).send({ error: message });
     }
 
     next();
