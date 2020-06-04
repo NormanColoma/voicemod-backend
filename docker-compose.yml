@@ -1,0 +1,18 @@
+version:  '3.3'
+services:
+  mongodb:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - data:/data/db
+  users-backend:
+    image: uanorman/voicemod-backend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017
+volumes:
+  data:
